@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Update the package lists for upgrades and new package installations
+sudo apt-get update
+
+# Upgrade all the installed packages to their latest version
+sudo apt-get upgrade -y
+
+# Install sudo and adduser package
+sudo apt-get install -y sudo adduser
+
+# Create group console
+sudo groupadd console
+
+# Add user 'user' to group console
+sudo usermod -a -G console user
+
+# Add user 'user' to group sudo
+sudo usermod -a -G sudo user
+
+# Reboot your system
+echo "System will reboot now."
+sudo reboot
+
+# After reboot, install extrepo package
+sudo apt-get install -y extrepo
+
+# Enable the stable kicksecure APT repository
+sudo extrepo enable kicksecure
+
+# Update the package lists for upgrades and new package installations
+sudo apt-get update
+
+# Install Kicksecure CLI packages
+sudo apt-get install non-qubes-whonix-cli -y
+
+# Install KDE Plasma Desktop
+sudo apt-get install -y kde-plasma-desktop
+
+# Add MAC address randomization settings to NetworkManager configuration
+echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" | sudo tee /etc/NetworkManager/conf.d/00-macrandomize.conf
+
+# Restart NetworkManager service
+sudo systemctl restart NetworkManager
+
+# Set hostname to localhost
+sudo hostnamectl set-hostname "localhost"
+
+echo "Installation complete. Please reboot your system."
